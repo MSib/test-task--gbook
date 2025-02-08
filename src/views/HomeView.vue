@@ -1,7 +1,9 @@
 <script setup></script>
 
 <template>
-  <div>Home page</div>
+  <Panel>
+    <div>Home page</div>
+  </Panel>
 </template>
 
 <style scoped></style>
