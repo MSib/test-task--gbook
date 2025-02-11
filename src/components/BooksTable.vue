@@ -1,11 +1,17 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book.js'
+import BookDetails from '@/components/BookDetails.vue'
 
 const store = useBookStore()
+const { openDialog } = store
 const { books, loading } = storeToRefs(store)
 /** Indent taking into account the button "Load more" @type {string} */
 const SCROLL_HEIGHT_INDENT = 'calc(100dvh - 6.6rem)'
+
+const onSelect = (event) => {
+  openDialog(event.data)
+}
 </script>
 
 <template>
@@ -13,6 +19,8 @@ const SCROLL_HEIGHT_INDENT = 'calc(100dvh - 6.6rem)'
     <DataTable
       :value="books"
       :loading="loading"
+      @rowSelect="onSelect"
+      selectionMode="single"
       dataKey="id"
       showGridlines
       resizableColumns
@@ -29,6 +37,7 @@ const SCROLL_HEIGHT_INDENT = 'calc(100dvh - 6.6rem)'
         header="Категории"
         class="whitespace-normal"
       ></Column>
+      <BookDetails />
     </DataTable>
   </div>
 </template>
