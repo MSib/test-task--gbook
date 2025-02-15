@@ -15,10 +15,19 @@ export const useBookStore = defineStore('book', () => {
   const book = ref(null)
   /** State of the book dialog @type {import('vue').Ref<boolean>} */
   const bookDialog = ref(false)
+  /** Current route instance @type {import('vue').Ref<import('vue-router').RouteLocationNormalized|null>} */
+  const currentRoute = ref(null)
   /** Router instance @type {import('vue').Ref<import('vue-router').Router|null>} */
   const currentRouter = ref(null)
   /** Is additional loading available @type {import('vue').Ref<boolean>} */
   const isAdditionalLoadingAvailable = ref(false)
+
+  /** Set the current router
+   * @param {import('vue-router').RouteLocationNormalized} route
+   */
+  const setCurrentRoute = (route) => {
+    currentRoute.value = route
+  }
 
   /** Set the current router
    * @param {import('vue-router').Router} router
@@ -59,19 +68,19 @@ export const useBookStore = defineStore('book', () => {
   }
 
   /** Open book dialog
-   * @param {Book} volume - Open book
+   * @param {Book} volume - Opening book
    */
-  const openDialog = (volume) => {
+  const openDialogDetail = (volume) => {
     book.value = { ...volume }
     bookDialog.value = true
-    currentRouter.value?.replace({ hash: `#${BOOKID_KEY}=${volume.id}` })
+    currentRouter.value?.push({ query: { [BOOKID_KEY]: volume.id } })
   }
 
   /** Close book dialog */
-  const closeDialog = () => {
+  const closeDialogDetail = () => {
     book.value = null
     bookDialog.value = false
-    currentRouter.value?.replace({ hash: '' })
+    currentRouter.value?.push({ query: {} })
   }
 
   /** Open book dialog
@@ -110,11 +119,12 @@ export const useBookStore = defineStore('book', () => {
     error,
     bookDialog,
     isAdditionalLoadingAvailable,
+    setCurrentRoute,
     setCurrentRouter,
     clearError,
     loadBooks,
-    openDialog,
-    closeDialog,
+    openDialogDetail,
+    closeDialogDetail,
     getBookById,
   }
 })

@@ -4,13 +4,13 @@ import { useBookStore } from '@/stores/book.js'
 import BookDetails from '@/components/BookDetails.vue'
 
 const store = useBookStore()
-const { openDialog } = store
+const { openDialogDetail } = store
 const { books, loading } = storeToRefs(store)
 /** Indent taking into account the button "Load more" @type {string} */
 const SCROLL_HEIGHT_INDENT = 'calc(100dvh - 6.6rem)'
 
 const onSelect = (event) => {
-  openDialog(event.data)
+  openDialogDetail(event.data)
 }
 </script>
 

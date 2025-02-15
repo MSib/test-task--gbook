@@ -4,11 +4,11 @@ import { storeToRefs } from 'pinia'
 import { useBookStore } from '@/stores/book.js'
 
 const store = useBookStore()
-const { closeDialog } = store
+const { closeDialogDetail } = store
 const { book, bookDialog } = storeToRefs(store)
 
 /** State of the book dialog @type {import('vue').Ref<boolean>} */
-const dialog = ref(false)
+const dialog = ref(bookDialog.value ?? false)
 
 /** Close book dialog */
 const hideDialog = () => {
@@ -17,12 +17,12 @@ const hideDialog = () => {
 
 watch(dialog, (value) => {
   if (!value) {
-    closeDialog()
+    closeDialogDetail()
   }
 })
 
 watch(bookDialog, () => {
-  dialog.value = bookDialog.value ? true : false
+  dialog.value = bookDialog.value
 })
 </script>
 
