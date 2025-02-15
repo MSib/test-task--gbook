@@ -1,13 +1,21 @@
 export {}
 
 /**
- * @typedef {Object} RequestOptions
+ * @typedef {Object} BooksOptions
  * @property {number} [startIndex] - The index of the first result to return
  */
 
 /**
- * @typedef {Object} ResponseOptions
+ * @typedef {Object} ResponseBooks
  * @property {Book[]} data
+ * @property {number} status
+ * @property {string} [error]
+ */
+
+/**
+ * @typedef {Object} ResponseBook
+ * @property {Book} [data]
+ * @property {number} status
  * @property {string} [error]
  */
 
