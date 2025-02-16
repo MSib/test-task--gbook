@@ -13,8 +13,12 @@ export const useBookStore = defineStore('book', () => {
   const position = ref(0)
   /** Selected book @type {import('vue').Ref<Book|null>} */
   const book = ref(null)
-  /** State of the book dialog @type {import('vue').Ref<boolean>} */
-  const bookDialog = ref(false)
+  /** State of the book dialog detail @type {import('vue').Ref<boolean>} */
+  const bookDialogDetail = ref(false)
+  /** Editable book @type {import('vue').Ref<Book|null>} */
+  const editableBook = ref(null)
+  /** State of the book dialog edit @type {import('vue').Ref<boolean>} */
+  const bookDialogEdit = ref(false)
   /** Current route instance @type {import('vue').Ref<import('vue-router').RouteLocationNormalized|null>} */
   const currentRoute = ref(null)
   /** Router instance @type {import('vue').Ref<import('vue-router').Router|null>} */
@@ -72,19 +76,42 @@ export const useBookStore = defineStore('book', () => {
    */
   const openDialogDetail = (volume) => {
     book.value = { ...volume }
-    bookDialog.value = true
+    bookDialogDetail.value = true
     currentRouter.value?.push({ query: { [BOOKID_KEY]: volume.id } })
   }
 
   /** Close book dialog */
   const closeDialogDetail = () => {
     book.value = null
-    bookDialog.value = false
+    bookDialogDetail.value = false
     currentRouter.value?.push({ query: {} })
   }
 
   /** Open book dialog
-   * @param {string} id - Open book
+   * @param {Book} volume - Opening book
+   */
+  const openDialogEdit = (volume) => {
+    editableBook.value = { ...volume }
+    bookDialogEdit.value = true
+  }
+
+  /** Edit book and close dialog
+   * @param {Book} volume - Opening book
+   */
+  const editBook = (volume) => {
+    const index = books.value.findIndex((book) => book.etag === editableBook.value.etag)
+    books.value[index] = { ...volume }
+    closeDialogEdit()
+  }
+
+  /** Close book dialog */
+  const closeDialogEdit = () => {
+    bookDialogEdit.value = false
+    editableBook.value = null
+  }
+
+  /** Get book by id
+   * @param {string} id - Book id
    */
   const getBookById = async (id) => {
     loading.value = true
@@ -97,7 +124,7 @@ export const useBookStore = defineStore('book', () => {
       }
       books.value = [result.data]
       book.value = result.data
-      bookDialog.value = true
+      bookDialogDetail.value = true
       isAdditionalLoadingAvailable.value = false
     } catch (err) {
       if (result?.status === 404) {
@@ -115,9 +142,11 @@ export const useBookStore = defineStore('book', () => {
   return {
     book,
     books,
+    editableBook,
     loading,
     error,
-    bookDialog,
+    bookDialogDetail,
+    bookDialogEdit,
     isAdditionalLoadingAvailable,
     setCurrentRoute,
     setCurrentRouter,
@@ -126,6 +155,9 @@ export const useBookStore = defineStore('book', () => {
     openDialogDetail,
     closeDialogDetail,
     getBookById,
+    openDialogEdit,
+    editBook,
+    closeDialogEdit,
   }
 })
 
