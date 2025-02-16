@@ -5,10 +5,10 @@ import { useBookStore } from '@/stores/book.js'
 
 const store = useBookStore()
 const { closeDialogDetail } = store
-const { book, bookDialog } = storeToRefs(store)
+const { book, bookDialogDetail } = storeToRefs(store)
 
 /** State of the book dialog @type {import('vue').Ref<boolean>} */
-const dialog = ref(bookDialog.value ?? false)
+const dialog = ref(bookDialogDetail.value ?? false)
 
 /** Close book dialog */
 const hideDialog = () => {
@@ -21,8 +21,8 @@ watch(dialog, (value) => {
   }
 })
 
-watch(bookDialog, () => {
-  dialog.value = bookDialog.value
+watch(bookDialogDetail, () => {
+  dialog.value = bookDialogDetail.value
 })
 </script>
 
