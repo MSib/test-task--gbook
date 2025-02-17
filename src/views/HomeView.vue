@@ -9,7 +9,6 @@ import SearchPanel from '@/components/SearchPanel.vue'
 import BooksTable from '@/components/BooksTable.vue'
 
 const route = useRoute()
-const router = useRouter()
 const toast = useToast()
 const store = useBookStore()
 const { loadBooks, clearError, getBookById } = store
@@ -43,7 +42,9 @@ const startPage = () => {
       return
     }
   }
-  onLoad()
+  if (!books.value.length) {
+    onLoad()
+  }
 }
 
 /** Initial loading of books */

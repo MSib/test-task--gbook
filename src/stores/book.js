@@ -159,6 +159,7 @@ export const useBookStore = defineStore('book', () => {
     bookDialogDetail,
     bookDialogEdit,
     isAdditionalLoadingAvailable,
+    lastSearchParams,
     setCurrentRoute,
     setCurrentRouter,
     clearError,
