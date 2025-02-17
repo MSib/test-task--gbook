@@ -25,6 +25,8 @@ export const useBookStore = defineStore('book', () => {
   const currentRouter = ref(null)
   /** Is additional loading available @type {import('vue').Ref<boolean>} */
   const isAdditionalLoadingAvailable = ref(false)
+  /** Last search params @type {import('vue').Ref<LastSearchParams>} */
+  const lastSearchParams = ref({})
 
   /** Set the current router
    * @param {import('vue-router').RouteLocationNormalized} route
@@ -50,14 +52,19 @@ export const useBookStore = defineStore('book', () => {
    * @param {LoadOptions} [options] - Load more books
    */
   const loadBooks = async (options) => {
+    const query = options?.query
     const more = options?.more
+    if (query) {
+      lastSearchParams.value = { query }
+    }
     loading.value = true
     error.value = null
     if (!more) {
       position.value = 0
     }
+    let result
     try {
-      const result = await fetchBooks({ startIndex: position.value })
+      result = await fetchBooks({ query: query || lastSearchParams.value?.query, startIndex: position.value })
       if (result.error) {
         throw new Error(result.error)
       }
@@ -65,7 +72,11 @@ export const useBookStore = defineStore('book', () => {
       position.value = books.value.length
       isAdditionalLoadingAvailable.value = result.data.length >= DEFAULT_PAGINATION_LIMIT
     } catch (err) {
-      error.value = 'Ошибка при загрузке книг'
+      if (result?.status === 429) {
+        error.value = 'Превышен лимит запросов к серверу'
+      } else {
+        error.value = 'Ошибка при загрузке книг'
+      }
     } finally {
       loading.value = false
     }
@@ -162,7 +173,13 @@ export const useBookStore = defineStore('book', () => {
 })
 
 /**
+ * @typedef {Object} LastSearchParams
+ * @property {string} [query] - Search query
+ */
+
+/**
  * @typedef {Object} LoadOptions
+ * @property {string} [query] - Search query
  * @property {boolean} [more] - If you need to load more books
  */
 
