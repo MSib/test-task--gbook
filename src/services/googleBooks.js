@@ -2,6 +2,9 @@
 const API_BASE_URL = 'https://www.googleapis.com/books/v1/volumes'
 /** Bookid key in hash @type {string} */
 export const BOOKID_KEY = 'bookId'
+/** Google Books API key @type {string} */
+// @ts-ignore
+const API_KEY = import.meta.env.VITE_API_KEY
 
 /** The default number of results to return @type {number} */
 export const DEFAULT_PAGINATION_LIMIT = 10
@@ -18,6 +21,9 @@ export const fetchBooks = async (options) => {
   const startIndex = options?.startIndex
   const params = new URLSearchParams()
   params.append('q', BROAD_GENRE)
+  if (API_KEY) {
+    params.append('key', API_KEY)
+  }
   if (startIndex) {
     params.append('startIndex', (startIndex < 0 ? 0 : startIndex).toString())
   }
@@ -45,7 +51,7 @@ export const fetchBook = async (id) => {
   /** The status code @type {number} */
   let status = 200
   try {
-    const response = await fetch(`${API_BASE_URL}/${id}`)
+    const response = await fetch(`${API_BASE_URL}/${id}${API_KEY ? `?key=${API_KEY}` : ''}`)
     status = response.status
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}`)
