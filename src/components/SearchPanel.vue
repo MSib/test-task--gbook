@@ -8,10 +8,10 @@ import { useBookStore } from '@/stores/book.js'
 
 const store = useBookStore()
 const { loadBooks } = store
-const { loading } = storeToRefs(store)
+const { loading, lastSearchParams } = storeToRefs(store)
 
 const initialValues = ref({
-  search: '',
+  search: lastSearchParams.value?.query || '',
 })
 
 const resolver = ref(
