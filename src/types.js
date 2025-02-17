@@ -2,6 +2,7 @@ export {}
 
 /**
  * @typedef {Object} BooksOptions
+ * @property {string} [query] - The search query
  * @property {number} [startIndex] - The index of the first result to return
  */
 

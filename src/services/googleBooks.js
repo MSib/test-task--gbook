@@ -20,12 +20,16 @@ export const fetchBooks = async (options) => {
   const BROAD_GENRE = 'subject:General'
   const startIndex = options?.startIndex
   const params = new URLSearchParams()
-  params.append('q', BROAD_GENRE)
-  if (API_KEY) {
-    params.append('key', API_KEY)
+  if (options?.query) {
+    params.append('q', options.query)
+  } else {
+    params.append('q', BROAD_GENRE)
   }
   if (startIndex) {
     params.append('startIndex', (startIndex < 0 ? 0 : startIndex).toString())
+  }
+  if (API_KEY) {
+    params.append('key', API_KEY)
   }
   try {
     const response = await fetch(`${API_BASE_URL}?${params.toString()}`)

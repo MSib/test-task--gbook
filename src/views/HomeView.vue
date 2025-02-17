@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { useToast } from 'primevue/usetoast'
 import { useBookStore } from '@/stores/book.js'
 import { BOOKID_KEY } from '@/services/googleBooks'
+import SearchPanel from '@/components/SearchPanel.vue'
 import BooksTable from '@/components/BooksTable.vue'
 
 const route = useRoute()
@@ -76,14 +77,23 @@ watch(error, async (newError, oldError) => {
 
 <template>
   <div class="flex flex-col gap-5">
-    <div v-if="!books.length" class="flex justify-center last-of-type:mb-5">
-      <Button label="Загрузить книги" @click="onLoad" :loading="loading" class="px-12" />
+    <div>
+      <SearchPanel />
     </div>
+    <!-- <div v-if="!books.length" class="flex justify-center last-of-type:mb-5">
+      <Button label="Загрузить книги" @click="onLoad" :loading="loading" severity="secondary" class="px-12" />
+    </div> -->
     <div v-if="(!loading && books.length) || isAdditionalLoadingAvailable">
       <BooksTable />
     </div>
+    <div v-if="loading && !books.length" class="card flex justify-center">
+      <ProgressSpinner />
+    </div>
+    <div v-if="!loading && !books.length" class="flex justify-center text-2xl">
+      <p>Список пуст</p>
+    </div>
     <div v-if="books.length && isAdditionalLoadingAvailable" class="flex justify-center last-of-type:mb-5">
-      <Button label="Загрузить ещё" @click="onLoadMore" :loading="loading" class="px-12" />
+      <Button label="Загрузить ещё" @click="onLoadMore" :loading="loading" severity="secondary" class="px-12" />
     </div>
     <Toast @close="onCloseError" @life-end="onCloseError" />
   </div>
