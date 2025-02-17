@@ -48,9 +48,6 @@ const startPage = () => {
 
 /** Initial loading of books */
 const onLoad = () => {
-  if (route.hash) {
-    router.replace({ hash: '' })
-  }
   loadBooks()
 }
 
@@ -68,7 +65,7 @@ onMounted(() => {
   startPage()
 })
 
-watch(error, async (newError, oldError) => {
+watch(error, async (newError) => {
   if (newError) {
     toast.add({ severity: 'error', summary: 'Ошибка', detail: newError, life: 3000 })
   }
@@ -80,9 +77,6 @@ watch(error, async (newError, oldError) => {
     <div>
       <SearchPanel />
     </div>
-    <!-- <div v-if="!books.length" class="flex justify-center last-of-type:mb-5">
-      <Button label="Загрузить книги" @click="onLoad" :loading="loading" severity="secondary" class="px-12" />
-    </div> -->
     <div v-if="(!loading && books.length) || isAdditionalLoadingAvailable">
       <BooksTable />
     </div>
